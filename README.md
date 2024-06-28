@@ -74,7 +74,7 @@ npm start
 Esto compilará los archivos TypeScript y luego iniciará el servidor en modo de producción.
 
 ---------------------------------------------------------------------------------
-----------Dependencias-----------------
+--------------------------------------------Dependencias--------------------------
 -@prisma/client: ORM para la interacción con bases de datos.
 -bcryptjs: Biblioteca para el hash de contraseñas.
 -cors: Middleware para habilitar CORS (Compartir Recursos de Origen Cruzado).
@@ -88,7 +88,7 @@ Esto compilará los archivos TypeScript y luego iniciará el servidor en modo de
 -swagger-jsdoc: Genera documentación Swagger/OpenAPI a partir de comentarios JSDoc.
 -swagger-ui-express: Middleware para servir Swagger UI.
 -validator: Biblioteca para validación y saneamiento de cadenas.
-----------Dependencias de Desarrollo---------------
+----------------------------------------Dependencias de Desarrollo---------------
 -@types/bcryptjs: Definiciones TypeScript para bcryptjs.
 -@types/cors: Definiciones TypeScript para cors.
 -@types/express: Definiciones TypeScript para express.
