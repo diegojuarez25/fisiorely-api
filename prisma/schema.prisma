@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,11 +10,131 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Role {
+  id                 Int       @id @default(autoincrement())
+  nombre             String
+  descripcion        String?
+  fecha_creacion     DateTime  @default(now())
+  fecha_actualizacion DateTime? @updatedAt
+  usuarios           Usuario[]
+}
+
 model Usuario {
-  cveUsuario Int @id @default(autoincrement())
-  nombre String @db.VarChar(200)
-  apellidos String @db.VarChar(500)
-  username String @db.VarChar(150)
-  password String @db.VarChar(1000)
-  fechaRegistro DateTime @default(now())
+  id                Int      @id @default(autoincrement())
+  nombre            String
+  apellido_paterno  String
+  apellido_materno  String
+  email             String   @unique
+  password          String
+  rol_id            Int
+  fecha_creacion    DateTime @default(now())
+  fecha_actualizacion DateTime? @updatedAt
+  rol               Role     @relation(fields: [rol_id], references: [id])
+  cortesCaja        CorteCaja[]
+}
+
+model Paciente {
+  id               Int      @id @default(autoincrement())
+  nombre           String
+  apellido_paterno String
+  apellido_materno String
+  telefono         String?
+  edad             Int?
+  fecha_creacion   DateTime @default(now())
+  fecha_actualizacion DateTime? @updatedAt
+  ingresos         Ingreso[]
+  consultas        Consulta[]
+  @@unique([nombre, apellido_paterno, apellido_materno])
+}
+
+model TipoIngreso {
+  id          Int      @id @default(autoincrement())
+  descripcion String
+  ingresos    Ingreso[]
+}
+
+model FormaPago {
+  id          Int      @id @default(autoincrement())
+  descripcion String
+  ingresos    Ingreso[]
+  gastos      Gasto[]
+}
+
+model Ingreso {
+  id                  Int      @id @default(autoincrement())
+  tipo_ingreso_id     Int
+  fecha_inicio        DateTime
+  fecha_fin           DateTime
+  paciente_id         Int
+  forma_pago_id       Int
+  monto               Float
+  persona_que_atendio String
+  modalidad_id        Int      @default(1)  // Valor predeterminado para modalidad_id
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime? @updatedAt
+  tipo_ingreso        TipoIngreso @relation(fields: [tipo_ingreso_id], references: [id])
+  paciente            Paciente    @relation(fields: [paciente_id], references: [id])
+  forma_pago          FormaPago   @relation(fields: [forma_pago_id], references: [id])
+  modalidad           Modalidad  @relation(fields: [modalidad_id], references: [id]) // Relación con Modalidad
+}
+
+model Gasto {
+  id                  Int      @id @default(autoincrement())
+  concepto            String
+  monto               Float
+  forma_pago_id       Int
+  fecha               DateTime
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime? @updatedAt
+  forma_pago          FormaPago @relation(fields: [forma_pago_id], references: [id])
+}
+
+model TipoConsulta {
+  id          Int      @id @default(autoincrement())
+  descripcion String
+  consultas   Consulta[]
+}
+
+model Consulta {
+  id                  Int      @id @default(autoincrement())
+  tipo_consulta_id    Int
+  modalidad_id        Int      @default(1)  // Valor predeterminado para modalidad_id
+  paciente_id         Int
+  padecimiento        String?
+  telefono            String?
+  edad                Int?
+  fecha_inicio        DateTime
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime? @updatedAt
+  tipo_consulta       TipoConsulta @relation(fields: [tipo_consulta_id], references: [id])
+  paciente            Paciente      @relation(fields: [paciente_id], references: [id])
+  persona_que_atendio String
+  modalidad           Modalidad  @relation(fields: [modalidad_id], references: [id]) // Relación con Modalidad
+}
+
+model CorteCaja {
+  id                  Int       @id @default(autoincrement())
+  fecha_inicio        DateTime
+  fecha_fin           DateTime
+  total_ingresos      Float
+  total_gastos        Float
+  efectivo            Float
+  transferencia       Float
+  tarjeta             Float
+  efectivo_gastos     Float    // Nueva propiedad para gastos en efectivo
+  transferencia_gastos Float    // Nueva propiedad para gastos por transferencia
+  tarjeta_gastos      Float    // Nueva propiedad para gastos por tarjeta
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime? @updatedAt
+  usuario_id          Int
+  usuario             Usuario   @relation(fields: [usuario_id], references: [id])
+}
+
+
+model Modalidad {
+  id          Int       @id @default(autoincrement())
+  descripcion String
+  ingresos    Ingreso[] // Relación inversa con Ingreso
+  consultas   Consulta[]
+
 }

@@ -1,8 +1,7 @@
-import { Router, RouterOptions } from "express";
+import { Router } from "express";
 import { authController } from "../controllers/auth.controller";
 
 class AuthRoutes {
-
     public router: Router;
 
     constructor() {
@@ -16,7 +15,7 @@ class AuthRoutes {
      *  User:
      *      type: object
      *      properties:
-     *          username:
+     *          email:
      *              type: string
      *          password:
      *              type: string
@@ -41,10 +40,17 @@ class AuthRoutes {
          *      responses:
          *          200:
          *              description: Exitoso
+         *          400:
+         *              description: Solicitud incorrecta
+         *          404:
+         *              description: Usuario no encontrado o contraseña incorrecta
+         *          500:
+         *              description: Error interno del servidor
          */
         this.router.post('/', authController.iniciarSesion);
-    }
 
+    }
 }
+
 const authRoutes = new AuthRoutes();
 export default authRoutes.router;

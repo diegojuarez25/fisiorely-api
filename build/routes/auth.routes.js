@@ -13,7 +13,7 @@ class AuthRoutes {
      *  User:
      *      type: object
      *      properties:
-     *          username:
+     *          email:
      *              type: string
      *          password:
      *              type: string
@@ -38,6 +38,12 @@ class AuthRoutes {
          *      responses:
          *          200:
          *              description: Exitoso
+         *          400:
+         *              description: Solicitud incorrecta
+         *          404:
+         *              description: Usuario no encontrado o contraseña incorrecta
+         *          500:
+         *              description: Error interno del servidor
          */
         this.router.post('/', auth_controller_1.authController.iniciarSesion);
     }
