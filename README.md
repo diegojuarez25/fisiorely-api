@@ -88,6 +88,7 @@ Esto compilará los archivos TypeScript y luego iniciará el servidor en modo de
 -swagger-jsdoc: Genera documentación Swagger/OpenAPI a partir de comentarios JSDoc.
 -swagger-ui-express: Middleware para servir Swagger UI.
 -validator: Biblioteca para validación y saneamiento de cadenas.
+
 ----------------------------------------Dependencias de Desarrollo---------------
 -@types/bcryptjs: Definiciones TypeScript para bcryptjs.
 -@types/cors: Definiciones TypeScript para cors.
