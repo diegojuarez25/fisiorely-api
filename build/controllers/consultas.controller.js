@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consultasController = void 0;
 const database_1 = __importDefault(require("../database/database"));
+const moment_1 = __importDefault(require("moment"));
 class ConsultasController {
     obtenerConsultas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,7 +35,6 @@ class ConsultasController {
                     fecha_inicio: consulta.fecha_inicio,
                     fecha_creacion: consulta.fecha_creacion,
                     fecha_actualizacion: consulta.fecha_actualizacion,
-                    persona_que_atendio: consulta.persona_que_atendio,
                     tipo_consulta: consulta.tipo_consulta.descripcion,
                     modalidad: consulta.modalidad.descripcion,
                     paciente: {
@@ -77,7 +77,6 @@ class ConsultasController {
                     fecha_inicio: consulta.fecha_inicio,
                     fecha_creacion: consulta.fecha_creacion,
                     fecha_actualizacion: consulta.fecha_actualizacion,
-                    persona_que_atendio: consulta.persona_que_atendio,
                     tipo_consulta: consulta.tipo_consulta.descripcion,
                     modalidad: consulta.modalidad.descripcion,
                     paciente: {
@@ -97,18 +96,26 @@ class ConsultasController {
     }
     agregarConsulta(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, telefono, edad, persona_que_atendio, fecha_inicio } = req.body;
+            const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, persona_que_atendio, fecha_inicio } = req.body;
             try {
+                // Obtener los datos del paciente
+                const paciente = yield database_1.default.paciente.findUnique({
+                    where: { id: Number(paciente_id) }
+                });
+                if (!paciente) {
+                    res.status(404).json({ message: 'Paciente no encontrado' });
+                    return;
+                }
+                // Crear la consulta incluyendo los datos del paciente
                 const nuevaConsulta = yield database_1.default.consulta.create({
                     data: {
                         tipo_consulta_id: Number(tipo_consulta_id),
                         modalidad_id: Number(modalidad_id),
                         paciente_id: Number(paciente_id),
                         padecimiento,
-                        telefono,
-                        edad,
-                        persona_que_atendio,
-                        fecha_inicio: new Date(fecha_inicio),
+                        telefono: paciente.telefono,
+                        edad: paciente.edad,
+                        fecha_inicio: (0, moment_1.default)(fecha_inicio).toDate(), // Parsear la fecha a objeto Date
                         fecha_creacion: new Date()
                     },
                     include: {
@@ -126,7 +133,6 @@ class ConsultasController {
                     fecha_inicio: nuevaConsulta.fecha_inicio,
                     fecha_creacion: nuevaConsulta.fecha_creacion,
                     fecha_actualizacion: nuevaConsulta.fecha_actualizacion,
-                    persona_que_atendio: nuevaConsulta.persona_que_atendio,
                     tipo_consulta: nuevaConsulta.tipo_consulta.descripcion,
                     modalidad: nuevaConsulta.modalidad.descripcion,
                     paciente: {
@@ -147,8 +153,17 @@ class ConsultasController {
     actualizarConsulta(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, telefono, edad, persona_que_atendio, fecha_inicio } = req.body;
+            const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, persona_que_atendio, fecha_inicio } = req.body;
             try {
+                // Obtener los datos del paciente
+                const paciente = yield database_1.default.paciente.findUnique({
+                    where: { id: Number(paciente_id) }
+                });
+                if (!paciente) {
+                    res.status(404).json({ message: 'Paciente no encontrado' });
+                    return;
+                }
+                // Actualizar la consulta incluyendo los datos del paciente
                 const consultaActualizada = yield database_1.default.consulta.update({
                     where: { id: Number(id) },
                     data: {
@@ -156,10 +171,10 @@ class ConsultasController {
                         modalidad_id: Number(modalidad_id),
                         paciente_id: Number(paciente_id),
                         padecimiento,
-                        telefono,
-                        edad,
-                        persona_que_atendio,
-                        fecha_inicio: new Date(fecha_inicio)
+                        telefono: paciente.telefono,
+                        edad: paciente.edad,
+                        fecha_inicio: (0, moment_1.default)(fecha_inicio).toDate(), // Parsear la fecha a objeto Date
+                        fecha_actualizacion: new Date()
                     },
                     include: {
                         tipo_consulta: true,
@@ -176,7 +191,6 @@ class ConsultasController {
                     fecha_inicio: consultaActualizada.fecha_inicio,
                     fecha_creacion: consultaActualizada.fecha_creacion,
                     fecha_actualizacion: consultaActualizada.fecha_actualizacion,
-                    persona_que_atendio: consultaActualizada.persona_que_atendio,
                     tipo_consulta: consultaActualizada.tipo_consulta.descripcion,
                     modalidad: consultaActualizada.modalidad.descripcion,
                     paciente: {

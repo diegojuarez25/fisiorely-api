@@ -40,6 +40,7 @@ model Paciente {
   apellido_materno String
   telefono         String?
   edad             Int?
+  estado           String
   fecha_creacion   DateTime @default(now())
   fecha_actualizacion DateTime? @updatedAt
   ingresos         Ingreso[]
@@ -108,7 +109,6 @@ model Consulta {
   fecha_actualizacion DateTime? @updatedAt
   tipo_consulta       TipoConsulta @relation(fields: [tipo_consulta_id], references: [id])
   paciente            Paciente      @relation(fields: [paciente_id], references: [id])
-  persona_que_atendio String
   modalidad           Modalidad  @relation(fields: [modalidad_id], references: [id]) // Relación con Modalidad
 }
 

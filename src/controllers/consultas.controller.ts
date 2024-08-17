@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../database/database';
+import moment from 'moment';
 
 class ConsultasController {
     public async obtenerConsultas(req: Request, res: Response): Promise<void> {
@@ -20,7 +21,6 @@ class ConsultasController {
                 fecha_inicio: consulta.fecha_inicio,
                 fecha_creacion: consulta.fecha_creacion,
                 fecha_actualizacion: consulta.fecha_actualizacion,
-                persona_que_atendio: consulta.persona_que_atendio,
                 tipo_consulta: consulta.tipo_consulta.descripcion,
                 modalidad: consulta.modalidad.descripcion,
                 paciente: {
@@ -61,7 +61,6 @@ class ConsultasController {
                 fecha_inicio: consulta.fecha_inicio,
                 fecha_creacion: consulta.fecha_creacion,
                 fecha_actualizacion: consulta.fecha_actualizacion,
-                persona_que_atendio: consulta.persona_que_atendio,
                 tipo_consulta: consulta.tipo_consulta.descripcion,
                 modalidad: consulta.modalidad.descripcion,
                 paciente: {
@@ -79,18 +78,28 @@ class ConsultasController {
     }
 
     public async agregarConsulta(req: Request, res: Response): Promise<void> {
-        const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, telefono, edad, persona_que_atendio, fecha_inicio } = req.body;
+        const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, persona_que_atendio, fecha_inicio } = req.body;
         try {
+            // Obtener los datos del paciente
+            const paciente = await prisma.paciente.findUnique({
+                where: { id: Number(paciente_id) }
+            });
+    
+            if (!paciente) {
+                res.status(404).json({ message: 'Paciente no encontrado' });
+                return;
+            }
+    
+            // Crear la consulta incluyendo los datos del paciente
             const nuevaConsulta = await prisma.consulta.create({
                 data: {
                     tipo_consulta_id: Number(tipo_consulta_id),
                     modalidad_id: Number(modalidad_id),
                     paciente_id: Number(paciente_id),
                     padecimiento,
-                    telefono,
-                    edad,
-                    persona_que_atendio,
-                    fecha_inicio: new Date(fecha_inicio),
+                    telefono: paciente.telefono,
+                    edad: paciente.edad,
+                    fecha_inicio: moment(fecha_inicio).toDate(), // Parsear la fecha a objeto Date
                     fecha_creacion: new Date()
                 },
                 include: {
@@ -99,6 +108,7 @@ class ConsultasController {
                     modalidad: true
                 }
             });
+    
             // Estructurar datos incluyendo relaciones
             const nuevaConsultaConRelaciones = {
                 id: nuevaConsulta.id.toString(),
@@ -108,7 +118,6 @@ class ConsultasController {
                 fecha_inicio: nuevaConsulta.fecha_inicio,
                 fecha_creacion: nuevaConsulta.fecha_creacion,
                 fecha_actualizacion: nuevaConsulta.fecha_actualizacion,
-                persona_que_atendio: nuevaConsulta.persona_que_atendio,
                 tipo_consulta: nuevaConsulta.tipo_consulta.descripcion,
                 modalidad: nuevaConsulta.modalidad.descripcion,
                 paciente: {
@@ -119,16 +128,28 @@ class ConsultasController {
                     edad: nuevaConsulta.paciente.edad
                 }
             };
+    
             res.status(201).json({ message: 'Consulta creada exitosamente', consulta: nuevaConsultaConRelaciones });
-        } catch (error:any) {
+        } catch (error: any) {
             res.status(500).json({ message: 'Error al crear consulta', error: error.message });
         }
     }
-
+    
     public async actualizarConsulta(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
-        const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, telefono, edad, persona_que_atendio, fecha_inicio } = req.body;
+        const { tipo_consulta_id, modalidad_id, paciente_id, padecimiento, persona_que_atendio, fecha_inicio } = req.body;
         try {
+            // Obtener los datos del paciente
+            const paciente = await prisma.paciente.findUnique({
+                where: { id: Number(paciente_id) }
+            });
+    
+            if (!paciente) {
+                res.status(404).json({ message: 'Paciente no encontrado' });
+                return;
+            }
+    
+            // Actualizar la consulta incluyendo los datos del paciente
             const consultaActualizada = await prisma.consulta.update({
                 where: { id: Number(id) },
                 data: {
@@ -136,10 +157,10 @@ class ConsultasController {
                     modalidad_id: Number(modalidad_id),
                     paciente_id: Number(paciente_id),
                     padecimiento,
-                    telefono,
-                    edad,
-                    persona_que_atendio,
-                    fecha_inicio: new Date(fecha_inicio)
+                    telefono: paciente.telefono,
+                    edad: paciente.edad,
+                    fecha_inicio: moment(fecha_inicio).toDate(), // Parsear la fecha a objeto Date
+                    fecha_actualizacion: new Date()
                 },
                 include: {
                     tipo_consulta: true,
@@ -147,6 +168,7 @@ class ConsultasController {
                     modalidad: true
                 }
             });
+    
             // Estructurar datos incluyendo relaciones
             const consultaActualizadaConRelaciones = {
                 id: consultaActualizada.id.toString(),
@@ -156,7 +178,6 @@ class ConsultasController {
                 fecha_inicio: consultaActualizada.fecha_inicio,
                 fecha_creacion: consultaActualizada.fecha_creacion,
                 fecha_actualizacion: consultaActualizada.fecha_actualizacion,
-                persona_que_atendio: consultaActualizada.persona_que_atendio,
                 tipo_consulta: consultaActualizada.tipo_consulta.descripcion,
                 modalidad: consultaActualizada.modalidad.descripcion,
                 paciente: {
@@ -167,12 +188,13 @@ class ConsultasController {
                     edad: consultaActualizada.paciente.edad
                 }
             };
+    
             res.status(200).json({ message: 'Consulta actualizada exitosamente', consulta: consultaActualizadaConRelaciones });
-        } catch (error:any) {
+        } catch (error: any) {
             res.status(500).json({ message: 'Error al actualizar consulta', error: error.message });
         }
     }
-
+    
     public async eliminarConsulta(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
         try {

@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pacientesController = void 0;
 const database_1 = __importDefault(require("../database/database"));
-class PacientesController {
+class PacientesRController {
     obtenerPacientes(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -44,7 +44,7 @@ class PacientesController {
     }
     agregarPaciente(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, apellido_paterno, apellido_materno, telefono, edad } = req.body;
+            const { nombre, apellido_paterno, apellido_materno, telefono, edad, estado } = req.body;
             try {
                 const nuevoPaciente = yield database_1.default.paciente.create({
                     data: {
@@ -53,6 +53,7 @@ class PacientesController {
                         apellido_materno,
                         telefono,
                         edad,
+                        estado,
                         fecha_creacion: new Date()
                     }
                 });
@@ -66,7 +67,7 @@ class PacientesController {
     actualizarPaciente(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const { nombre, apellido_paterno, apellido_materno, telefono, edad } = req.body;
+            const { nombre, apellido_paterno, apellido_materno, telefono, edad, estado } = req.body;
             try {
                 const pacienteActualizado = yield database_1.default.paciente.update({
                     where: { id: Number(id) },
@@ -75,7 +76,8 @@ class PacientesController {
                         apellido_paterno,
                         apellido_materno,
                         telefono,
-                        edad
+                        edad,
+                        estado
                     }
                 });
                 res.status(200).json({ message: 'Paciente actualizado exitosamente', paciente: pacienteActualizado });
@@ -98,4 +100,4 @@ class PacientesController {
         });
     }
 }
-exports.pacientesController = new PacientesController();
+exports.pacientesController = new PacientesRController();
