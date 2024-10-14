@@ -1,7 +1,7 @@
 app = "fisiorely-api"
 
 [build]
-  builder = "Dockerfile"
+  dockerfile = "Dockerfile"
 
 [env]
   PORT = "3000"
