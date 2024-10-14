@@ -10,6 +10,7 @@ class PacientesRController {
             res.status(200).json(pacientes);
         } catch (error: any) {
             res.status(500).json({ message: 'Error al obtener pacientes', error: error.message });
+            
         }
     }
 
