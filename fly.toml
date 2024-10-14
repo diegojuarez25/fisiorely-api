@@ -1,7 +1,7 @@
 app = "fisiorely-api"
 
-[build]
-  builder = "heroku/nodejs"
+[a buildpack]
+  builder = "Dockerfile"
 
 [env]
   PORT = "3000"
