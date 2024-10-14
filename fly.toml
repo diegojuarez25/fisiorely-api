@@ -1,6 +1,6 @@
 app = "fisiorely-api"
 
-[a buildpack]
+[build]
   builder = "Dockerfile"
 
 [env]
