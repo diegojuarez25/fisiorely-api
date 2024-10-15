@@ -9,11 +9,7 @@ const options = {
             contact: {
                 name: "Eric Domenzain",
                 url: "https://github.com/ericdomen"
-            },
-            servers: [{
-                url: "http://localhost:3000",
-                description: "Developer Server"
-            }]
+            }
         }
     },
     basePath: "/",
