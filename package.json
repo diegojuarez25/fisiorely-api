@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -w",
-    "dev": "nodemon build/index.js",
+    "dev": "node index.js",
     "start": "concurrently --kill-others \"npm run build\" \"npm run dev\""
   },
   "keywords": [],
