@@ -7,14 +7,19 @@ app = "fisiorely-api"
   DATABASE_URL=postgres://fisiorely_api:OAGOICDrkgvwvvh@fisiorely-api-db.flycast:5432/fisiorely_api?sslmode=disable
   PORT = "8080"
 
-  [[services]]  # Configuración del servicio
-  http_checks = []  # Verificaciones de salud HTTP (opcional)
-  http_port = 8080  # Puerto donde tu aplicación escucha
+ [[services]]
+  internal_port = 8080
+  protocol = "tcp"
 
-  [[services.ports]]  # Puertos expuestos
-    port = "8080"  # Puerto público expuesto
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
 
-  [[services.concurrency]]  # Configuración de concurrencia
-    hard_limit = 10  # Límite duro de concurrencia
-    soft_limit = 5   # Límite blando de concurrencia
+  [[services.ports]]
+    handlers = ["http"]
+    port = "8080"
+
+  [[services.tcp_checks]]
+    interval = 10000
+    timeout = 2000
 
