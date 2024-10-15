@@ -3,8 +3,10 @@ FROM node:18
 RUN mkdir /app
 WORKDIR /app
 
-COPY --chown=node:node package.json .
-COPY --chown=node:node package-lock.json .
+COPY package*.json ./
 RUN npm install
+
+COPY . .
+EXPOSE 8080
 
 CMD ["npm","run","dev"]
