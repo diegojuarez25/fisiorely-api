@@ -1,12 +1,9 @@
 FROM node:18
 
-WORKDIR /src
-
-COPY package*.json ./
+WORKDIR /app
+ADD src/ /app/src/
+ADD package*.json ./
 
 RUN npm install
-
-COPY . .
-EXPOSE 3000
 
 CMD ["npm","start"]
