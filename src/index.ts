@@ -27,7 +27,7 @@ class Server {
 
     config(): void {
         // Configuración del puerto para el servidor
-        this.app.set("port", 3000);
+        this.app.set("port", 8080);
         
         // Muestra las peticiones en consola
         this.app.use(morgan("dev"));
