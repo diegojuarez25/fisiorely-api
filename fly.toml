@@ -4,5 +4,17 @@ app = "fisiorely-api"
   dockerfile = "Dockerfile"
 
 [env]
+  DATABASE_URL=postgres://fisiorely_api:OAGOICDrkgvwvvh@fisiorely-api-db.flycast:5432/fisiorely_api?sslmode=disable
   PORT = "8080"
+
+  [[services]]  # Configuración del servicio
+  http_checks = []  # Verificaciones de salud HTTP (opcional)
+  http_port = 8080  # Puerto donde tu aplicación escucha
+
+  [[services.ports]]  # Puertos expuestos
+    port = "8080"  # Puerto público expuesto
+
+  [[services.concurrency]]  # Configuración de concurrencia
+    hard_limit = 10  # Límite duro de concurrencia
+    soft_limit = 5   # Límite blando de concurrencia
 
