@@ -4,5 +4,5 @@ app = "fisiorely-api"
   dockerfile = "Dockerfile"
 
 [env]
-  PORT = "3000"
+  PORT = "8080"
 
