@@ -1,9 +1,9 @@
 FROM node:18
 
+RUN mkdir /app
 WORKDIR /app
-ADD src/ /app/src/
-ADD package*.json ./
+
 
 RUN npm install
 
-CMD ["npm","start"]
+CMD ["npm","run","start"]
