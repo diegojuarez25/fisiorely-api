@@ -4,7 +4,7 @@ app = "fisiorely-api"
   dockerfile = "Dockerfile"
 
 [env]
-  DATABASE_URL=postgres://fisiorely_api:OAGOICDrkgvwvvh@fisiorely-api-db.flycast:5432/fisiorely_api?sslmode=disable
+  DATABASE_URL="postgres://fisiorely_api:OAGOICDrkgvwvvh@fisiorely-api-db.flycast:5432/fisiorely_api?sslmode=disable"
   PORT = "8080"
 
  [[services]]
