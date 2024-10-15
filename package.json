@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc -w",
     "dev": "node index.js",
-    "start": "concurrently --kill-others \"npm run build\" \"npm run dev\""
+    "start": "node index.js",
+    "prestart": "npm run build"
   },
   "keywords": [],
   "author": "",
