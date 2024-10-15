@@ -4,9 +4,6 @@ app = "fisiorely-api"
   dockerfile = "Dockerfile"
 
 [env]
-
-  PORT = "8080"
-
  [[services]]
   internal_port = 8080
   protocol = "tcp"
@@ -15,7 +12,5 @@ app = "fisiorely-api"
     handlers = ["http"]
     port = "8080"
 
-  [[services.tcp_checks]]
-    interval = 10000
-    timeout = 2000
+
 
