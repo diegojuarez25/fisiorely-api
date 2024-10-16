@@ -8,7 +8,7 @@ RUN npm install
 
 
 COPY . .
-RUN npx prisma migrate dev fisiorely-deploy
+RUN npm install -g prisma
 RUN npx prisma generate
 CMD ["npm", "start"]
 
