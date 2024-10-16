@@ -5,9 +5,10 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
-RUN npx prisma migrate dev fisiorely-deploy
-RUN npx prisma generate
+
 
 COPY . .
+RUN npx prisma migrate dev fisiorely-deploy
+RUN npx prisma generate
 CMD ["npm", "start"]
 
